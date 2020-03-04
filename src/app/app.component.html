@@ -1,7 +1,16 @@
+<div class="toolBar">
+  <h2>Selected: {{ rowSelectedCount || '0' }}</h2>
+  <h2>Data: {{ dataCount || '0' }}</h2>
+  <button (click)="toggle()">Selection mode {{ toggleMode }}</button>
+</div>
+
 <ag-grid-angular
+  #grid
   [columnDefs]="columnDefs"
   [rowData]="rowData"
+  (gridReady)="onGridReady($event)"
+  (selectionChanged)="onSelectionChanged($event)"
   class="ag-theme-balham"
-  style="width: 720px; height: 480px;"
+  style="width: 1000px; height: 500px"
 >
 </ag-grid-angular>
