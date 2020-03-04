@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { YoutubeService } from './services/youtube.service';
+import { GridHeaderCheckBoxComponent } from './grid-header-check-box/grid-header-check-box.component';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit {
   columnDefs = [
     {
       colId: 'checkbox',
-      headerCheckboxSelection: true,
+      headerComponentFramework:  GridHeaderCheckBoxComponent,
       checkboxSelection: true,
     },
     {
