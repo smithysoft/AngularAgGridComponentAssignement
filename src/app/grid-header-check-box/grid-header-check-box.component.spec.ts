@@ -3,32 +3,14 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { GridHeaderCheckBoxComponent } from './grid-header-check-box.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { GridService } from '../services/grid.service';
-import { IHeaderParams } from 'ag-grid-community';
-import { GridApi } from 'ag-grid-community/dist/lib/gridApi';
+
+import { stubParams } from 'src/app/stubs';
 
 describe('GridHeaderCheckBoxComponent', () => {
   let component: GridHeaderCheckBoxComponent;
   let fixture: ComponentFixture<GridHeaderCheckBoxComponent>;
 
   let gridService: GridService;
-
-  const stubParams: IHeaderParams = {
-    column: null,
-    displayName: null,
-    enableSorting: null,
-    enableMenu: null,
-    showColumnMenu: null,
-    progressSort: null,
-    setSort: null,
-    columnApi: null,
-    api: {
-      getSelectedRows: () => ['mock', 'mock'],
-      selectAll: () => null,
-      deselectAll: () => null,
-    } as GridApi,
-    context: null,
-    template: null
-  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
