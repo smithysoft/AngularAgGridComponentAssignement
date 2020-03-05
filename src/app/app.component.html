@@ -6,11 +6,13 @@
 
 <ag-grid-angular
   #grid
+  [modules]="modules"
   [columnDefs]="columnDefs"
   [rowData]="rowData"
   (gridReady)="onGridReady($event)"
   (selectionChanged)="onSelectionChanged($event)"
   [rowSelection]="rowSelection"
+  [getContextMenuItems]="getContextMenuItems"
   class="ag-theme-balham"
   style="width: 1000px; height: 500px"
 >

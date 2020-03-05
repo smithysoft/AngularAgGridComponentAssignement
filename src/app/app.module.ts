@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AgGridModule } from 'ag-grid-angular';
+import 'ag-grid-enterprise';
+
 import { HttpClientModule } from '@angular/common/http';
 import { GridHeaderCheckBoxComponent } from './grid-header-check-box/grid-header-check-box.component';
 
