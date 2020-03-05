@@ -38,7 +38,9 @@ export class GridHeaderCheckBoxComponent implements OnInit, IHeaderAngularComp {
 
   getAllRows(gridApi: GridApi) {
     const rowData = [];
+
     gridApi.forEachNode(node => rowData.push(node.data));
+
     return rowData;
   }
 }
