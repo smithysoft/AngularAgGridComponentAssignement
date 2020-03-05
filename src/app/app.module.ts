@@ -7,6 +7,7 @@ import 'ag-grid-enterprise';
 
 import { HttpClientModule } from '@angular/common/http';
 import { GridHeaderCheckBoxComponent } from './grid-header-check-box/grid-header-check-box.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [

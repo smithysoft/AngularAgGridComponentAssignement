@@ -1,0 +1,25 @@
+.grid  {
+  margin: 0 auto;
+  max-width: 80%;
+  height: 90%;
+}
+
+::ng-deep .ag-cell {
+  font-size: 18px;
+
+  &[col-id='publishedAt'] {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &[col-id='title'] {
+    display: flex;
+    align-items: center;
+  }
+
+  a:link, a:visited, a:hover, a:active {
+    color: black;
+  }
+}

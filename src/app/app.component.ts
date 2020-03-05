@@ -2,73 +2,77 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { YoutubeService } from './services/youtube.service';
 import { GridHeaderCheckBoxComponent } from './grid-header-check-box/grid-header-check-box.component';
 import { GridService } from './services/grid.service';
-import { Module } from 'ag-grid-community';
 import { ClipboardModule } from '@ag-grid-enterprise/clipboard';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [DatePipe],
 })
 export class AppComponent implements OnInit {
-  modules = [ClipboardModule];
   @ViewChild('grid') grid;
-
-  title = 'AgGrid';
 
   rowData: any;
   rowSelectedCount: any;
   dataCount: any;
-  toggleMode = true;
+
   rowSelection: ('multiple' | null) = 'multiple';
+  modules = [ClipboardModule];
 
   columnDefs = [
     {
-      colId: 'checkbox',
+      colId: 'checkbox', checkboxSelection: true, resizable: false, suppressSizeToFit: true, width: 40,
       headerComponentFramework: GridHeaderCheckBoxComponent,
-      checkboxSelection: true,
-      suppressMenu: true,
     },
     {
-      headerName: '', field: 'thumbnails', sortable: true, autoHeight: true,
-      suppressMenu: true,
+      headerName: '', field: 'thumbnails', sortable: true, autoHeight: true, suppressSizeToFit: true, width: 120,
       cellRenderer: (cell) => `<img src="${cell.value.default.url}" height="90" width="120" alt="avatar"> `
     },
-    { headerName: 'Published on', field: 'publishedAt', sortable: true },
+    {
+      headerName: 'Published on', field: 'publishedAt', sortable: true,
+      cellRenderer: (cell) => this.transformDate(cell.value)
+    },
     {
       headerName: 'Video Title', field: 'title', sortable: true, cellStyle: { 'white-space': 'normal' },
       cellRenderer: (cell) => `<a href="https://www.youtube.com/watch?v=${cell.data.videoId}" target="_blank">${cell.value}</a>`
     },
-    {
-      headerName: 'Description', field: 'description', sortable: true, cellStyle: { 'white-space': 'normal' },
-      suppressMenu: true,
-    }
+    { headerName: 'Description', field: 'description', sortable: true, cellStyle: { 'white-space': 'normal' } }
   ];
 
-  constructor(public youtubeService: YoutubeService, private gridService: GridService) {
+  constructor(public youtubeService: YoutubeService, private gridService: GridService, private datePipe: DatePipe) {
   }
 
   ngOnInit(): void {
     this.youtubeService.get()
-      .subscribe((resp) => this.rowData = resp);
+      .subscribe(resp => this.rowData = resp);
+
+    this.gridService.$toggleMode
+      .subscribe(val => {
+        this.rowSelection = val ? 'multiple' : null;
+        this.grid.api.deselectAll();
+
+        this.grid.columnApi.setColumnVisible('checkbox', val);
+      });
   }
 
   onSelectionChanged($event) {
     this.rowSelectedCount = $event.api.getSelectedRows().length;
+
     this.gridService.$grid.next();
   }
 
   onGridReady($event) {
     this.dataCount = $event.api.getDisplayedRowCount();
+
+    $event.api.sizeColumnsToFit();
   }
 
   toggle() {
-    this.toggleMode = !this.grid.columnApi.getColumn('checkbox').visible;
+    const toggleMode = !this.grid.columnApi.getColumn('checkbox').visible;
 
-    this.rowSelection = this.toggleMode ? 'multiple' : null;
-    this.grid.api.deselectAll();
-
-    this.grid.columnApi.setColumnVisible('checkbox', this.toggleMode);
+    this.gridService.$toggleMode.next(toggleMode);
   }
 
   getContextMenuItems(params) {
@@ -77,9 +81,7 @@ export class AppComponent implements OnInit {
     if (params.column.colId === 'title') {
       result.push({
         name: 'Open in new tab',
-        action: () => {
-          window.open(`https://www.youtube.com/watch?v=${params.node.data.videoId}`, '_blank');
-        }
+        action: () => window.open(`https://www.youtube.com/watch?v=${params.node.data.videoId}`, '_blank')
       });
     }
 
@@ -87,5 +89,9 @@ export class AppComponent implements OnInit {
     result.push('paste');
 
     return result;
+  }
+
+  transformDate(date) {
+    return this.datePipe.transform(date, 'yyyy-MM-dd');
   }
 }

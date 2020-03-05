@@ -7,5 +7,8 @@ import { Subject } from 'rxjs';
 export class GridService {
   $grid = new Subject();
 
-  constructor() { }
+  $toggleMode: Subject<boolean> = new Subject();
+
+  constructor() {
+  }
 }
