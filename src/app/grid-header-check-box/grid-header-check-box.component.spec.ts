@@ -1,25 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridHeaderCheckBoxComponent } from './grid-header-check-box.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 describe('GridHeaderCheckBoxComponent', () => {
   let component: GridHeaderCheckBoxComponent;
   let fixture: ComponentFixture<GridHeaderCheckBoxComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ GridHeaderCheckBoxComponent ]
-    })
-    .compileComponents();
-  }));
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [GridHeaderCheckBoxComponent],
+      imports: [ AgGridModule.withComponents([]) ]
+    });
+
     fixture = TestBed.createComponent(GridHeaderCheckBoxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should be defined', () => {
+    expect(component).toBeDefined();
   });
 });
