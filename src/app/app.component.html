@@ -1,10 +1,19 @@
-<div class="toolBar">
-  <h2>Selected: {{ rowSelectedCount || '0' }}</h2>
-  <h2>Data: {{ dataCount || '0' }}</h2>
-  <button (click)="toggle()">Selection mode</button>
-</div>
+
 
 <div class="grid">
+  <div class="toolBar">
+    <h2>Selected: {{ rowSelectedCount || '0' }}</h2>
+    <h2>Data: {{ dataCount || '0' }}</h2>
+
+    <div class="selection-mode">
+      <h2>Selection mode</h2>
+      <label class="switch">
+        <input type="checkbox" (change)="toggle()" checked>
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+
   <ag-grid-angular
     #grid
     [modules]="modules"
