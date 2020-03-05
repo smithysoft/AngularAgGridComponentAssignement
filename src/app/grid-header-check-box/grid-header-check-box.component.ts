@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IHeaderAngularComp } from 'ag-grid-angular';
-import { IHeaderParams } from 'ag-grid-community';
+import { GridApi, IHeaderParams } from 'ag-grid-community';
+import { GridService } from '../services/grid.service';
 
 @Component({
   selector: 'app-grid-header-check-box',
@@ -8,12 +9,23 @@ import { IHeaderParams } from 'ag-grid-community';
   styleUrls: ['./grid-header-check-box.component.scss']
 })
 export class GridHeaderCheckBoxComponent implements OnInit, IHeaderAngularComp {
+  @ViewChild('checkbox') checkbox: ElementRef<any>;
+
   params: IHeaderParams;
 
-  constructor() {
+  rowsLength: number;
+  rowsSelectedLength: number;
+
+  constructor(private gridService: GridService) {
   }
 
   ngOnInit(): void {
+    this.gridService.$grid.subscribe(() => {
+      this.rowsLength = this.getAllRows(this.params.api).length;
+      this.rowsSelectedLength = this.params.api.getSelectedRows().length;
+
+      this.checkbox.nativeElement.checked = (this.rowsLength === this.rowsSelectedLength);
+    });
   }
 
   agInit(params: IHeaderParams): void {
@@ -21,10 +33,12 @@ export class GridHeaderCheckBoxComponent implements OnInit, IHeaderAngularComp {
   }
 
   toggle($event) {
-    if ($event.target.checked) {
-      this.params.api.selectAll();
-      return;
-    }
-    this.params.api.deselectAll();
+    $event.target.checked ? this.params.api.selectAll() : this.params.api.deselectAll();
+  }
+
+  getAllRows(gridApi: GridApi) {
+    const rowData = [];
+    gridApi.forEachNode(node => rowData.push(node.data));
+    return rowData;
   }
 }

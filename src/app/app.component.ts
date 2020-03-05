@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { YoutubeService } from './services/youtube.service';
 import { GridHeaderCheckBoxComponent } from './grid-header-check-box/grid-header-check-box.component';
+import { GridService } from './services/grid.service';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +17,12 @@ export class AppComponent implements OnInit {
   rowSelectedCount: any;
   dataCount: any;
   toggleMode = true;
+  rowSelection: ('multiple' | null) = 'multiple';
 
   columnDefs = [
     {
       colId: 'checkbox',
-      headerComponentFramework:  GridHeaderCheckBoxComponent,
+      headerComponentFramework: GridHeaderCheckBoxComponent,
       checkboxSelection: true,
     },
     {
@@ -35,7 +37,7 @@ export class AppComponent implements OnInit {
     { headerName: 'Description', field: 'description', sortable: true, cellStyle: { 'white-space': 'normal' }, }
   ];
 
-  constructor(public youtubeService: YoutubeService) {
+  constructor(public youtubeService: YoutubeService, private gridService: GridService) {
   }
 
   ngOnInit(): void {
@@ -45,6 +47,7 @@ export class AppComponent implements OnInit {
 
   onSelectionChanged($event) {
     this.rowSelectedCount = $event.api.getSelectedRows().length;
+    this.gridService.$grid.next();
   }
 
   onGridReady($event) {
@@ -52,10 +55,11 @@ export class AppComponent implements OnInit {
   }
 
   toggle() {
-    this.grid.api.rowSelection = 'none';
+    this.toggleMode = !this.grid.columnApi.getColumn('checkbox').visible;
+
+    this.rowSelection = this.toggleMode ? 'multiple' : null;
     this.grid.api.deselectAll();
 
-    this.toggleMode = !this.grid.columnApi.getColumn('checkbox').visible;
     this.grid.columnApi.setColumnVisible('checkbox', this.toggleMode);
   }
 }
